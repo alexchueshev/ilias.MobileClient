@@ -1,0 +1,28 @@
+<ion-navbar *navbar primary>
+  <button menuToggle>
+    <ion-icon name="menu"></ion-icon>
+  </button>
+  <ion-title >
+    ОС Linux
+  </ion-title>
+  
+  <ion-buttons end>
+    <button (click)="openTableOfContents()">
+      <ion-icon ios="ios-list-box-outline" name="list-box"></ion-icon>
+    </button>
+    <button (click)="openActions()">
+      <ion-icon name="more"></ion-icon>
+    </button>
+  </ion-buttons>
+</ion-navbar>
+
+<ion-content class="content">
+  <ion-card>
+    <ion-card-header>
+      Card Header
+    </ion-card-header>
+    <ion-card-content>
+      Hello World
+    </ion-card-content>
+  </ion-card>
+</ion-content>

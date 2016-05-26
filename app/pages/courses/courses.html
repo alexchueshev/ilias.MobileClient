@@ -1,0 +1,41 @@
+<ion-navbar *navbar primary>
+  <button menuToggle>
+    <ion-icon name="menu"></ion-icon>
+  </button>
+  <ion-title>
+    Мои курсы
+  </ion-title>
+</ion-navbar>
+
+<ion-content class="courses">
+  <ion-refresher (refresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Потяните для обновления" refreshingText="Обновление...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+
+  <ion-searchbar [(ngModel)]="myInput" [hideCancelButton]="shouldHideCancel" (input)="onInput($event)" (cancel)="onCancel($event)">
+  </ion-searchbar>
+
+  <ion-list>
+    <ion-item-sliding>
+      <button ion-item (click)="onCourseClicked()">
+          <ion-icon name="ios-book" item-left></ion-icon>
+          <h2>Операционные системы</h2>
+          <p>учебный курс</p>
+          <ion-icon name="ios-arrow-forward-outline" item-right hideWhen="ios"></ion-icon>
+        </button>
+      <ion-item-options>
+        <button primary (click)="onCourseClicked()">
+            <ion-icon name="open"></ion-icon>
+              Открыть
+          </button>
+        <button danger>
+            <ion-icon name="close"></ion-icon>
+              Убрать
+          </button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+</ion-content>

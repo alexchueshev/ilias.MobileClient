@@ -1,11 +1,10 @@
-export enum ConnectionStatus {
-    online,
-    offline,
-    none
+export interface AuthData {
+    login: string,
+    password: string
 }
 
-export interface IConnection {
-    
+export abstract class IConnection {
+    abstract login(authData: AuthData);
 }
 
 export {ConnectionLocal} from './connection-local';

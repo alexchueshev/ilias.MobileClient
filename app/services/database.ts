@@ -8,9 +8,7 @@ export class Database {
     constructor() {
     }
 
-    /**
-     *
-     */
+    /**To use the service call initialize method after platfom's ready  */
     public initialize(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             this.db = new Storage(SqlStorage, {
@@ -55,6 +53,7 @@ export class Database {
                         chapter_id INTEGER REFERENCES chapters(id) ON UPDATE CASCADE ON DELETE CASCADE
                        );`
             );
+            resolve();
         });
     }
 };

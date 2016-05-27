@@ -1,30 +1,24 @@
 import {Injectable} from '@angular/core';
-import {Platform} from 'ionic-angular';
 import {Network, Connection} from 'ionic-native';
 
-import {Database} from './database';
 import {IConnection, ConnectionLocal, ConnectionServer} from '../connections/connection';
 
 @Injectable()
 export class AppManager {
-    private platform: Platform;
-    private database: Database;
-    
     connection: IConnection;
     get Connection(): IConnection {
         return this.connection;
     }
-    
-    constructor(platform: Platform, database: Database) {
-        this.platform = platform;
-        this.database = database;
+
+    constructor() {
     }
 
+    /**To use the service call initialize method after platfom's ready  */
     public initialize(): Promise<any> {
-        return this.platform.ready().then(() => {
+        return new Promise<any>((resolve, reject) => {
             this.updateConnection();
-            return this.database.initialize();
-        })
+            resolve();
+        });
     }
 
     public updateConnection() {
@@ -41,7 +35,7 @@ export class AppManager {
     }
 
     public onConnect() {
-        
+
     }
 
     private onDisconnect() {

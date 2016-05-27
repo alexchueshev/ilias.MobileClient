@@ -1,8 +1,9 @@
-import {App, IonicApp} from 'ionic-angular';
+import {App, IonicApp, NavController, Platform} from 'ionic-angular';
 import {OnInit} from '@angular/core';
 
 import {AppManager} from './services/app-manager';
 import {Database} from './services/database';
+import {Settings} from './services/settings';
 
 import {DesktopPage} from './pages/desktop/desktop';
 import {CoursesPage} from './pages/courses/courses';
@@ -53,20 +54,18 @@ import {LoginPage} from './pages/login/login';
 
     <ion-nav id="menu-nav" #content [root]="rootPage"></ion-nav>`,
   config: {}, // http://ionicframework.com/docs/v2/api/config/Config/
-  providers: [AppManager, Database]
+  providers: [AppManager, Database, Settings]
 })
 export class MyApp implements OnInit {
-  nav: any;
-  app: IonicApp;
-  appManager: AppManager;
-  
+  nav: NavController;
+
+  /*Pages*/
   rootPage: any;
   desktopPage: any = DesktopPage;
   coursesPage: any = CoursesPage;
 
-  constructor(app: IonicApp, appManager: AppManager) {
-    this.app = app;
-    this.appManager = appManager;
+  constructor(private app: IonicApp, private platform: Platform,
+    private appManager: AppManager, private database: Database, private settings: Settings) {
   }
 
   public openPage(page): void {
@@ -74,11 +73,19 @@ export class MyApp implements OnInit {
   }
 
   public ngOnInit() {
-    this.appManager.initialize().then(() => {
-      this.rootPage = DesktopPage;
-      this.nav = this.app.getActiveNav();
+    this.platform.ready().then(() => {
+      return Promise.all([
+        this.appManager.initialize(),
+        this.database.initialize(),
+        this.settings.initialize()
+      ]).then(() => {
+        this.rootPage = DesktopPage;
+        this.nav = this.app.getActiveNav();
+      }).catch((error) => {
+        return Promise.reject(error);
+      })
     }).catch((error) => {
-      console.log(error);
+      console.log(error)
     });
   }
 }  

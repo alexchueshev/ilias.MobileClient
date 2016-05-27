@@ -1,6 +1,8 @@
 import {App, Platform, IonicApp} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
 
+import {Database} from './services/database';
+
 import {DesktopPage} from './pages/desktop/desktop';
 import {CoursesPage} from './pages/courses/courses';
 import {LoginPage} from './pages/login/login';
@@ -49,23 +51,27 @@ import {LoginPage} from './pages/login/login';
     </ion-menu>
 
     <ion-nav id="menu-nav" #content [root]="rootPage"></ion-nav>`,
-  config: {} // http://ionicframework.com/docs/v2/api/config/Config/
+  config: {}, // http://ionicframework.com/docs/v2/api/config/Config/
+  providers: [Database]
 })
 export class MyApp {
   nav: any;
   app: IonicApp;
-  rootPage: any = DesktopPage;
+  rootPage: any;
   desktopPage: any = DesktopPage;
   coursesPage: any = CoursesPage;
 
-  constructor(platform: Platform, app: IonicApp) {
+  constructor(platform: Platform, app: IonicApp, database: Database) {
     this.app = app;
     
+    
     platform.ready().then(() => {
+      this.rootPage = DesktopPage;
       this.nav = app.getActiveNav();
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
-      StatusBar.styleDefault();
+
+      //window.StatusBar.styleDefault();
     });
   }
 

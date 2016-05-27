@@ -1,6 +1,7 @@
-import {App, Platform, IonicApp} from 'ionic-angular';
-import {StatusBar} from 'ionic-native';
+import {App, IonicApp} from 'ionic-angular';
+import {OnInit} from '@angular/core';
 
+import {AppManager} from './services/app-manager';
 import {Database} from './services/database';
 
 import {DesktopPage} from './pages/desktop/desktop';
@@ -52,30 +53,32 @@ import {LoginPage} from './pages/login/login';
 
     <ion-nav id="menu-nav" #content [root]="rootPage"></ion-nav>`,
   config: {}, // http://ionicframework.com/docs/v2/api/config/Config/
-  providers: [Database]
+  providers: [AppManager, Database]
 })
-export class MyApp {
+export class MyApp implements OnInit {
   nav: any;
   app: IonicApp;
+  appManager: AppManager;
+  
   rootPage: any;
   desktopPage: any = DesktopPage;
   coursesPage: any = CoursesPage;
 
-  constructor(platform: Platform, app: IonicApp, database: Database) {
+  constructor(app: IonicApp, appManager: AppManager) {
     this.app = app;
-    
-    
-    platform.ready().then(() => {
-      this.rootPage = DesktopPage;
-      this.nav = app.getActiveNav();
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
-
-      //window.StatusBar.styleDefault();
-    });
+    this.appManager = appManager;
   }
 
   public openPage(page): void {
-    this.nav.setRoot(page, null, {animate:true});
+    this.nav.setRoot(page, null, { animate: true });
+  }
+
+  public ngOnInit() {
+    this.appManager.initialize().then(() => {
+      this.rootPage = DesktopPage;
+      this.nav = this.app.getActiveNav();
+    }).catch((error) => {
+      console.log(error);
+    });
   }
 }  

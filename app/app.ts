@@ -1,4 +1,4 @@
-import {App, IonicApp, NavController, Platform} from 'ionic-angular';
+import {App, IonicApp, NavController, Platform, MenuController, Events} from 'ionic-angular';
 import {OnInit} from '@angular/core';
 
 import {AppManager} from './services/app-manager';
@@ -56,7 +56,7 @@ import {LoginPage} from './pages/login/login';
   config: {}, // http://ionicframework.com/docs/v2/api/config/Config/
   providers: [AppManager, Database, Settings]
 })
-export class MyApp implements OnInit {
+export class ILIASMobileClient implements OnInit {
   nav: NavController;
 
   /*Pages*/
@@ -64,7 +64,7 @@ export class MyApp implements OnInit {
   desktopPage: any = DesktopPage;
   coursesPage: any = CoursesPage;
 
-  constructor(private app: IonicApp, private platform: Platform,
+  constructor(private app: IonicApp, private platform: Platform, private menu: MenuController, private events: Events,
     private appManager: AppManager, private database: Database, private settings: Settings) {
   }
 
@@ -79,8 +79,13 @@ export class MyApp implements OnInit {
         this.database.initialize(),
         this.settings.initialize()
       ]).then(() => {
-        this.rootPage = DesktopPage;
+        this.menu.enable(false);
         this.nav = this.app.getActiveNav();
+        this.events.subscribe('user:login', () => {
+          this.menu.enable(true);
+          this.openPage(this.desktopPage)
+        });
+        this.rootPage = LoginPage;
       }).catch((error) => {
         return Promise.reject(error);
       })

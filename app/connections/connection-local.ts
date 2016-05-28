@@ -5,5 +5,6 @@ export class ConnectionLocal implements IConnection {
     }
 
     public login(authData: AuthData) {
+        return Promise.resolve();
     }
 };

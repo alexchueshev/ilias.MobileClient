@@ -5,5 +5,6 @@ export class ConnectionServer implements IConnection {
     }
     
     public login(authData: AuthData) {
+        return Promise.resolve();
     }
 };

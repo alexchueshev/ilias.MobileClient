@@ -6,22 +6,21 @@
 
 <ion-content overflow-scroll="false" padding="true">
 
-  <form>
-    <!-- [ngFormModel]="form" (submit)="login($event)" -->
+  <form #loginForm="ngForm" (submit)="login(loginForm.value)">
     <ion-list>
       <ion-item>
         <ion-label stacked>Логин</ion-label>
-        <ion-input type="text" value=""></ion-input>
+        <ion-input type="text" ngControl="login" required></ion-input>
       </ion-item>
 
       <ion-item>
         <ion-label stacked>Пароль</ion-label>
-        <ion-input type="password" value=""></ion-input>
+        <ion-input type="password" ngControl="password" required></ion-input>
       </ion-item>
     </ion-list>
 
     <div padding>
-      <button primary block>Вход</button>
+      <button primary block type="submit">Вход</button>
     </div>
   </form>
 </ion-content>

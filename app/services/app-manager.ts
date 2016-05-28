@@ -1,3 +1,7 @@
+/**
+ * To use the service call initialize method first after platform's ready (see app.ts)
+ *
+*/
 import {Injectable} from '@angular/core';
 import {Network, Connection} from 'ionic-native';
 
@@ -5,7 +9,7 @@ import {IConnection, ConnectionLocal, ConnectionServer} from '../connections/con
 
 @Injectable()
 export class AppManager {
-    connection: IConnection;
+    private connection: IConnection;
     get Connection(): IConnection {
         return this.connection;
     }
@@ -13,7 +17,7 @@ export class AppManager {
     constructor() {
     }
 
-    /**To use the service call initialize method after platfom's ready  */
+    
     public initialize(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             this.updateConnection();

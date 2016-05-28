@@ -2,19 +2,22 @@
  * To use the service call initialize method first after platform's ready (see app.ts)
  *
 */
-import {Injectable} from '@angular/core';
+import {Injectable, Inject} from '@angular/core';
 import {Network, Connection} from 'ionic-native';
+import {Http} from '@angular/http';
 
-import {IConnection, ConnectionLocal, ConnectionServer} from '../connections/connection';
+import {Settings} from './settings'; 
+
+import {IConnection, ConnectionLocal, ConnectionServer} from './connections/connection';
 
 @Injectable()
 export class AppManager {
-    private connection: IConnection;
+    connection: IConnection;
     get Connection(): IConnection {
         return this.connection;
     }
 
-    constructor() {
+    constructor(private connectionLocal: ConnectionLocal, private connectionServer: ConnectionServer ) {
     }
 
     
@@ -30,10 +33,10 @@ export class AppManager {
             case Connection.UNKNOWN:
             case Connection.NONE:
             case Connection.ETHERNET:
-                this.connection = new ConnectionLocal();
+                this.connection = this.connectionLocal; /*TODO change on Local*/
                 break;
             default:
-                this.connection = new ConnectionServer();
+                this.connection = this.connectionServer;
                 break;
         }
     }

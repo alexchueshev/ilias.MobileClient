@@ -2,5 +2,9 @@
     "auth": {
         "url": "/v2/oauth2/token",
         "method": "POST"
+    },
+    "routes": {
+        "url": "/v2/util/routes",
+        "method": "GET"
     }
 }

@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
-import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class Settings {
 
+    private serverURL: string;    
     private settings: Object;
     private routes: Object;
     
@@ -18,6 +18,7 @@ export class Settings {
         ]).then(([settings, routes]) => { 
             this.settings = settings;
             this.routes = routes;
+            this.serverURL = this.setting('url_server');
         });
     }
 
@@ -26,9 +27,9 @@ export class Settings {
         return this.settings[property];
     }
 
-    public route(property: string): Route {
+    public route(property: string): string {
         if (!this.routes) return null;
-        return this.routes[property];
+        return this.serverURL.concat(this.routes[property].url);
     }
 
     private readfromSettingsFolder(filename: string): Promise<Object> {
@@ -41,8 +42,3 @@ export class Settings {
         });
     }
 };
-
-interface Route {
-    url: string;
-    method: string;
-}

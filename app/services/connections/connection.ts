@@ -4,6 +4,8 @@ export interface AuthData {
 }
 
 export abstract class IConnection {
+    constructor() {
+    }
     abstract login(authData: AuthData);
 }
 

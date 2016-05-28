@@ -3,7 +3,9 @@
     "target": "es5",
     "module": "commonjs",
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "sourceRoot": "."
   },
   "filesGlob": [
     "**/*.ts",
@@ -18,4 +20,5 @@
   "atom": {
     "rewriteTsconfig": false
   }
+ 
 }

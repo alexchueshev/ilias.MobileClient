@@ -15,7 +15,7 @@ export class LoginPage {
     }).then(() => {
       this.events.publish('user:login');
     }).catch(() => {
-      console.log("Access denied!");
+      alert("Access denied!");
     })
 
   }

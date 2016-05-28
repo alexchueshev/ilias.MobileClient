@@ -6,7 +6,11 @@ export interface AuthData {
 export abstract class IConnection {
     constructor() {
     }
-    abstract login(authData: AuthData);
+    public abstract login(authData: AuthData);
+
+    public getCourses(): Promise<any> {
+        return Promise.resolve();
+    }
 }
 
 export {ConnectionLocal} from './connection-local';

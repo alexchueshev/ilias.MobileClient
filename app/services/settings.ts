@@ -3,11 +3,20 @@ import {Http} from '@angular/http';
 
 @Injectable()
 export class Settings {
+    private serverURL: string;
 
-    private serverURL: string;    
+    private userAccess: UserAccess;
+    public get UserAccess(): UserAccess {
+        return this.userAccess;
+    }
+    public set UserAccess(userAccess: UserAccess) {
+        this.userAccess = userAccess;
+    }
+
     private settings: Object;
     private routes: Object;
-    
+
+
     constructor(private http: Http) {
     }
 
@@ -15,7 +24,7 @@ export class Settings {
         return Promise.all([
             this.readfromSettingsFolder('settings.json'),
             this.readfromSettingsFolder('routes.json')
-        ]).then(([settings, routes]) => { 
+        ]).then(([settings, routes]) => {
             this.settings = settings;
             this.routes = routes;
             this.serverURL = this.setting('url_server');
@@ -42,3 +51,10 @@ export class Settings {
         });
     }
 };
+
+interface UserAccess {
+    access_token: string,
+    refresh_token: string,
+    expires_in: number,
+    token_type: string
+}

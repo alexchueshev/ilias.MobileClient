@@ -1,4 +1,4 @@
-import {Http} from '@angular/http';
+import {Http, Headers} from '@angular/http';
 import {Injectable} from '@angular/core';
 
 import {Database} from '../database';
@@ -14,12 +14,23 @@ export class ConnectionServer extends IConnection {
 
     public login(authData: AuthData) {
         return new Promise((resolve, reject) => {
-            this.http.get(this.settings.route('routes')).subscribe((data) => {
-                console.log(data.json())
-            }, (error) => {
-                console.log(error);
-                reject(error);
-            })
+            var headers = new Headers();
+            headers.append('Content-Type', 'application/x-www-form-urlencoded');
+            this.http.post(this.settings.route('auth'),
+                `grant_type=password&username=${authData.login}&password=${authData.password}&api_key=${this.settings.setting('api_key')}`, {
+                    headers: headers
+                })
+                .subscribe((data) => {
+                    this.settings.UserAccess = data.json();
+                    resolve();
+                }, (error) => {
+                    console.log(error);
+                    reject(error);
+                })
         });
+    }
+
+    public getCourses() {
+        return super.getCourses();
     }
 };

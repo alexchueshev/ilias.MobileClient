@@ -1,4 +1,4 @@
-import {Http, Headers} from '@angular/http';
+import {Http, Headers, URLSearchParams} from '@angular/http';
 import {Injectable} from '@angular/core';
 
 import {Database} from '../database';
@@ -12,7 +12,7 @@ export class ConnectionServer extends IConnection {
         super();
     }
 
-    public login(authData: AuthData) {
+    public login(authData: AuthData): Promise<any> {
         return new Promise((resolve, reject) => {
             var headers = new Headers();
             headers.append('Content-Type', 'application/x-www-form-urlencoded');
@@ -24,13 +24,47 @@ export class ConnectionServer extends IConnection {
                     this.settings.UserAccess = data.json();
                     resolve();
                 }, (error) => {
-                    console.log(error);
                     reject(error);
                 })
         });
     }
 
-    public getCourses() {
-        return super.getCourses();
+    public getUserInfo(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            var searchParams = new URLSearchParams();
+            searchParams.set('access_token', this.settings.UserAccess.access_token);
+            this.http.get(this.settings.route('userinfo'), { search: searchParams })
+                .subscribe((data) => {
+                    resolve(data.json());
+                }, (error) => {
+                    reject(error);
+                })
+        });
+    }
+
+    public getCourses(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            var searchParams = new URLSearchParams();
+            searchParams.set('access_token', this.settings.UserAccess.access_token);
+            this.http.get(this.settings.route('courses'), { search: searchParams })
+                .subscribe((data) => {
+                    resolve(data.json());
+                }, (error) => {
+                    reject(error);
+                })
+        })
+    }
+
+    public getCourseInfo(refId: number): Promise<any> {
+        return new Promise((resolve, reject) => {
+           var searchParams = new URLSearchParams();
+            searchParams.set('access_token', this.settings.UserAccess.access_token);
+            this.http.get(this.settings.route('courseinfo').concat(String(refId)), { search: searchParams })
+                .subscribe((data) => {
+                    resolve(data.json());
+                }, (error) => {
+                    reject(error);
+                })
+        });
     }
 };

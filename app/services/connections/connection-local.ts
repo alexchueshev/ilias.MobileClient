@@ -13,4 +13,12 @@ export class ConnectionLocal extends IConnection {
     public login(authData: AuthData) {
         return Promise.resolve();
     }
+
+    public getUserInfo() {
+
+    }
+
+    public getCourseInfo(refId: number) {
+
+    }
 };

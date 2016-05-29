@@ -3,6 +3,18 @@
         "url": "/v2/oauth2/token",
         "method": "POST"
     },
+    "userinfo": {
+        "url": "/v1/umr/userinfo",
+        "method": "GET"
+    },
+    "courses": {
+        "url": "/v1/courses",
+        "method": "GET"
+    },
+    "courseinfo": {
+        "url": "/v1/courses/",
+        "method": "GET"
+    },
     "routes": {
         "url": "/v2/util/routes",
         "method": "GET"

@@ -82,10 +82,7 @@ export class ILIASMobileClient implements OnInit {
       ]).then(() => {
         this.menu.enable(false);
         this.nav = this.app.getActiveNav();
-        this.events.subscribe('user:login', () => {
-          this.menu.enable(true);
-          this.openPage(this.desktopPage)
-        });
+        this.events.subscribe('user:login', () => this.onUserLogin());
         this.rootPage = LoginPage;
       }).catch((error) => {
         return Promise.reject(error);
@@ -93,5 +90,19 @@ export class ILIASMobileClient implements OnInit {
     }).catch((error) => {
       console.log(error)
     });
+  }
+
+  private onUserLogin() {
+    this.appManager.Connection.getCourseInfo(67).then((data) => {
+      console.log(data);
+    }).catch((error) => {
+      console.log(error);
+    });
+    this.appManager.Connection.getUserInfo().then((data) => {
+      this.menu.enable(true);
+      this.openPage(this.desktopPage);
+    }).catch((error) => {
+      console.log(error);
+    })
   }
 }  

@@ -8,6 +8,10 @@ export abstract class IConnection {
     }
     public abstract login(authData: AuthData);
 
+    public abstract getUserInfo();
+
+    public abstract getCourseInfo(refId: number);
+    
     public getCourses(): Promise<any> {
         return Promise.resolve();
     }

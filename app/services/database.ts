@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Storage, SqlStorage} from 'ionic-angular';
 
+import {UserData} from './descriptions';
+
 @Injectable()
 export class Database {
     db: Storage;
@@ -63,14 +65,7 @@ export class Database {
 
     public saveUserData(userdata: UserData): Promise<any> {
         return this.db.query(`INSERT INTO user VALUES (?,?,?,?,?)`, [
-            userdata.login, userdata.password, userdata.firstname, userdata.secondname, userdata.avatar]);
+            userdata.login, userdata.password, userdata.firstname, userdata.secondname, userdata.avatar
+        ]);
     }
 };
-
-export interface UserData {
-    login: string;
-    password: string;
-    firstname?: string;
-    secondname?: string;
-    avatar?: string;
-}

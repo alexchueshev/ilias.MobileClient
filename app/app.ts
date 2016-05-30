@@ -79,7 +79,7 @@ export class ILIASMobileClient implements OnInit {
       return Promise.all([
         this.appManager.initialize(),
         this.database.initialize(),
-        this.filesystem.initialize(),
+        //this.filesystem.initialize(),
         this.settings.initialize()
       ]).then(() => {
         this.menu.enable(false);
@@ -95,12 +95,7 @@ export class ILIASMobileClient implements OnInit {
   }
 
   private onUserLogin() {
-    this.appManager.Connection.getCourseInfo(67).then((data) => {
-      console.log(data);
-    }).catch((error) => {
-      console.log(error);
-    });
-    this.appManager.Connection.getUserInfo().then((data) => {
+    this.appManager.getUserInfo().then((data) => {
       this.menu.enable(true);
       this.openPage(this.desktopPage);
     }).catch((error) => {

@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
 
+import {UserAccess} from './descriptions';
+
 @Injectable()
 export class Settings {
     private serverURL: string;
@@ -51,10 +53,3 @@ export class Settings {
         });
     }
 };
-
-interface UserAccess {
-    access_token: string,
-    refresh_token: string,
-    expires_in: number,
-    token_type: string
-}

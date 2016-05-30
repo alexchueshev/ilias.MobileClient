@@ -6,25 +6,38 @@ import {Injectable, Inject} from '@angular/core';
 import {Network, Connection} from 'ionic-native';
 import {Http} from '@angular/http';
 
-import {Settings} from './settings'; 
+import {Settings} from './settings';
+import {ITask} from './tasks/task-userdata';
 
 import {IConnection, ConnectionLocal, ConnectionServer} from './connections/connection';
 
 @Injectable()
 export class AppManager {
-    connection: IConnection;
+    private connection: IConnection;
     get Connection(): IConnection {
         return this.connection;
     }
 
-    constructor(private connectionLocal: ConnectionLocal, private connectionServer: ConnectionServer ) {
+    constructor(private connectionLocal: ConnectionLocal, private connectionServer: ConnectionServer) {
     }
 
-    
+
     public initialize(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             this.updateConnection();
             resolve();
+        });
+    }
+
+    public login() {
+
+    }
+
+    public getUserInfo(): Promise<any> {
+        return this.connection.getUserInfo().then((task: ITask) => {
+            task.execute();
+        }).catch((error) => { 
+            return Promise.reject(error);
         });
     }
 

@@ -1,5 +1,8 @@
 import {Injectable} from '@angular/core';
-import {IConnection, AuthData} from './connection';
+
+import {IConnection} from './connection';
+import {UserData} from '../descriptions';
+import {ITask} from '../tasks/task-userdata';
 
 import {Database} from '../database';
 import {Settings} from '../settings'
@@ -10,12 +13,12 @@ export class ConnectionLocal extends IConnection {
         super();
     }
 
-    public login(authData: AuthData) {
+    public login(userData: UserData) {
         return Promise.resolve();
     }
 
-    public getUserInfo() {
-
+    public getUserInfo(): Promise<ITask> {
+        return Promise.resolve(null);
     }
 
     public getCourseInfo(refId: number) {

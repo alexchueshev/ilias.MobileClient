@@ -8,6 +8,7 @@ import {Http} from '@angular/http';
 
 import {Settings} from './settings';
 import {ITask} from './tasks/task-userdata';
+import {UserData} from './descriptions';
 
 import {IConnection, ConnectionLocal, ConnectionServer} from './connections/connection';
 
@@ -33,9 +34,9 @@ export class AppManager {
 
     }
 
-    public getUserInfo(): Promise<any> {
-        return this.connection.getUserInfo().then((task: ITask) => {
-            task.execute();
+    public getUserInfo(): Promise<UserData> {
+        return this.connection.getUserInfo().then((task) => {
+            return task.execute();
         }).catch((error) => { 
             return Promise.reject(error);
         });
@@ -46,7 +47,7 @@ export class AppManager {
             case Connection.UNKNOWN:
             case Connection.NONE:
             case Connection.ETHERNET:
-                this.connection = this.connectionLocal; /*TODO change on Local*/
+                this.connection = this.connectionLocal; 
                 break;
             default:
                 this.connection = this.connectionServer;

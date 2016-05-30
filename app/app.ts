@@ -79,7 +79,7 @@ export class ILIASMobileClient implements OnInit {
       return Promise.all([
         this.appManager.initialize(),
         this.database.initialize(),
-        //this.filesystem.initialize(),
+        this.filesystem.initialize(),
         this.settings.initialize()
       ]).then(() => {
         this.menu.enable(false);

@@ -18,12 +18,19 @@ export class Database {
                 backupFlag: SqlStorage.BACKUP_LOCAL,
                 existingDatabase: true
             });
+            /*only dev */
+            this.db.query('DROP TABLE user');
+            this.db.query('DROP TABLE courses');
+            this.db.query('DROP TABLE learning_modules');
+            this.db.query('DROP TABLE chapters');
+            this.db.query('DROP TABLE pages');
+            
             this.db.query(`CREATE TABLE IF NOT EXISTS user (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         login TEXT,
                         password TEXT,
                         firstname TEXT,
-                        secondname TEXT,
+                        lastname TEXT,
                         avatar TEXT
                        );`
             );
@@ -64,8 +71,8 @@ export class Database {
     }
 
     public saveUserData(userdata: UserData): Promise<any> {
-        return this.db.query(`INSERT INTO user VALUES (?,?,?,?,?)`, [
-            userdata.login, userdata.password, userdata.firstname, userdata.secondname, userdata.avatar
+        return this.db.query(`INSERT INTO user(login, password, firstname, lastname, avatar) VALUES (?,?,?,?,?)`, [
+            userdata.login, userdata.password, userdata.firstname, userdata.lastname, userdata.avatar
         ]);
     }
 };

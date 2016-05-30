@@ -11,7 +11,7 @@ export interface UserData {
     login: string;
     password: string;
     firstname?: string;
-    secondname?: string;
+    lastname?: string;
     avatar?: string;
 }
 

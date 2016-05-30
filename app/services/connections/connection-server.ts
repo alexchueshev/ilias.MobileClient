@@ -42,23 +42,23 @@ export class ConnectionServer extends IConnection {
     }
 
     public getUserInfo(): Promise<ITask> {
-        return new Promise((resolve, reject) => {
-            var searchParams = new URLSearchParams();
-            searchParams.set('access_token', this.settings.UserAccess.access_token);
-            this.http.get(this.settings.route('userinfo'), { search: searchParams })
-                .subscribe((data) => {
-                    var userdata = data.json();
-                    resolve(new UserDataTaskSaver(this.filesystem, this.database, {
-                        login: this.settings.UserAccess.login,
-                        password: this.settings.UserAccess.password,
-                        firstname: userdata.firstname,
-                        secondname: userdata.secondname,
-                        avatar: userdata.avatar
-                    }));
-                }, (error) => {
-                    reject(error);
-                })
-        });
+        var searchParams = new URLSearchParams();
+        searchParams.set('access_token', this.settings.UserAccess.access_token);
+
+        return this.http.get(this.settings.route('userinfo'), { search: searchParams })
+            .toPromise().then((response) => {
+                var userdata = response.json();
+                return new UserDataTaskSaver(this.filesystem, this.database, this.settings, {
+                    login: this.settings.UserAccess.login,
+                    password: this.settings.UserAccess.password,
+                    firstname: userdata.firstname,
+                    lastname: userdata.lastname,
+                    avatar: userdata.avatar
+                });
+            }).catch((error) => {
+                return Promise.reject(error);
+            })
+
     }
 
     public getCourses(): Promise<any> {

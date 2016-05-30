@@ -29,7 +29,7 @@ export class Settings {
         ]).then(([settings, routes]) => {
             this.settings = settings;
             this.routes = routes;
-            this.serverURL = this.setting('url_server');
+            this.serverURL = this.setting('url_api');
         });
     }
 

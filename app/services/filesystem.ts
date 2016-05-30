@@ -4,10 +4,12 @@ import {File, Transfer} from 'ionic-native';
 
 @Injectable()
 export class Filesystem {
+    public static TEMPORARY: number = 0;
+    public static PERSISTENT: number = 1;
+
     private tempFileSystem: FileSystem;
     private persistentFileSystem: FileSystem;
 
-    private file: File;
     private transfer: Transfer;
     
     constructor() {
@@ -33,5 +35,14 @@ export class Filesystem {
             rejectFn(error);
         }
         return promise;
+    }
+
+    public downloadFile(uri: string, type: number): Promise<FileEntry> {
+        var target = (type === Filesystem.TEMPORARY) ? this.tempFileSystem.root.toURL() : this.persistentFileSystem.root.toURL();
+        var filename = uri.substring(uri.lastIndexOf('/') + 1, uri.lastIndexOf('?'));
+        return File.createFile(target, filename, true).then((file: FileEntry) => {
+            return this.transfer.download(encodeURI(uri), file.toURL(), true);
+        });
+        
     }
 };

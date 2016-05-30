@@ -1,5 +1,6 @@
 {
     "name": "ILIASMobileClient",
     "api_key": "apollon",
-    "url_server": "http://1.chueshev.cz8.ru/restplugin.php"
+    "url_api": "http://1.chueshev.cz8.ru/restplugin.php",
+    "url_server": "http://1.chueshev.cz8.ru/"
 }

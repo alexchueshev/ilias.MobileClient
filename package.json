@@ -36,7 +36,10 @@
     "cordova-plugin-statusbar",
     "ionic-plugin-keyboard",
     "cordova-sqlite-storage",
-    "cordova-plugin-network-information"
+    "cordova-plugin-network-information",
+    "cordova-plugin-file",
+    "cordova-plugin-file-transfer",
+    "cordova-plugin-zip"
   ],
   "cordovaPlatforms": []
 }

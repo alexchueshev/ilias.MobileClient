@@ -3,6 +3,7 @@ import {OnInit} from '@angular/core';
 
 import {AppManager} from './services/app-manager';
 import {Database} from './services/database';
+import {Filesystem} from './services/filesystem';
 import {Settings} from './services/settings';
 import {ConnectionLocal, ConnectionServer} from './services/connections/connection';
 
@@ -55,8 +56,8 @@ import {LoginPage} from './pages/login/login';
 
     <ion-nav id="menu-nav" #content [root]="rootPage"></ion-nav>`,
   config: {}, // http://ionicframework.com/docs/v2/api/config/Config/
-  providers: [AppManager, Database, Settings, ConnectionLocal, ConnectionServer]
-})
+  providers: [AppManager, Database, Filesystem, Settings, ConnectionLocal, ConnectionServer]
+})  
 export class ILIASMobileClient implements OnInit {
   nav: NavController;
 
@@ -66,7 +67,7 @@ export class ILIASMobileClient implements OnInit {
   coursesPage: any = CoursesPage;
 
   constructor(private app: IonicApp, private platform: Platform, private menu: MenuController, private events: Events,
-    private appManager: AppManager, private database: Database, private settings: Settings) {
+    private appManager: AppManager, private database: Database, private filesystem: Filesystem, private settings: Settings) {
   }
 
   public openPage(page): void {
@@ -78,6 +79,7 @@ export class ILIASMobileClient implements OnInit {
       return Promise.all([
         this.appManager.initialize(),
         this.database.initialize(),
+        this.filesystem.initialize(),
         this.settings.initialize()
       ]).then(() => {
         this.menu.enable(false);

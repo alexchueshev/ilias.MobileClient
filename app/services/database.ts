@@ -17,8 +17,12 @@ export class Database {
                 existingDatabase: true
             });
             this.db.query(`CREATE TABLE IF NOT EXISTS user (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
                         login TEXT,
-                        password TEXT
+                        password TEXT,
+                        firstname TEXT,
+                        secondname TEXT,
+                        avatar TEXT
                        );`
             );
 
@@ -56,4 +60,17 @@ export class Database {
             resolve();
         });
     }
+
+    public saveUserData(userdata: UserData): Promise<any> {
+        return this.db.query(`INSERT INTO user VALUES (?,?,?,?,?)`, [
+            userdata.login, userdata.password, userdata.firstname, userdata.secondname, userdata.avatar]);
+    }
 };
+
+export interface UserData {
+    login: string;
+    password: string;
+    firstname?: string;
+    secondname?: string;
+    avatar?: string;
+}

@@ -2,14 +2,14 @@ import {Injectable} from '@angular/core';
 
 import {IConnection} from './connection';
 import {UserData} from '../descriptions';
-import {ITask} from '../tasks/task-userdata';
+import {ITask, TaskType, TaskFactory} from '../tasks/task';
 
 import {Database} from '../database';
 import {Settings} from '../settings'
 
 @Injectable()
 export class ConnectionLocal extends IConnection {
-    constructor(private database: Database, private settings: Settings) {
+    constructor(private database: Database, private settings: Settings, private taskFactory: TaskFactory) {
         super();
     }
 

@@ -2,11 +2,10 @@
  * To use the service call initialize method first after platform's ready (see app.ts)
  *
 */
-import {Injectable, Inject} from '@angular/core';
+import {Injectable, Injector, Inject} from '@angular/core';
 import {Network, Connection} from 'ionic-native';
 import {Http} from '@angular/http';
 
-import {Settings} from './settings';
 import {ITask} from './tasks/task-userdata';
 import {UserData} from './descriptions';
 
@@ -15,13 +14,10 @@ import {IConnection, ConnectionLocal, ConnectionServer} from './connections/conn
 @Injectable()
 export class AppManager {
     private connection: IConnection;
-    get Connection(): IConnection {
-        return this.connection;
-    }
 
-    constructor(private connectionLocal: ConnectionLocal, private connectionServer: ConnectionServer) {
+    constructor(private connectionServer: ConnectionServer, private connectionLocal: ConnectionLocal,
+        private http: Http) {
     }
-
 
     public initialize(): Promise<any> {
         return new Promise<any>((resolve, reject) => {
@@ -30,14 +26,18 @@ export class AppManager {
         });
     }
 
-    public login() {
-
+    public login(userdata: UserData): Promise<any> {
+        return this.connection.login(userdata).then((task) => {
+            return task.execute();
+        }).catch((error) => {
+            return Promise.reject(error);
+        });
     }
 
     public getUserInfo(): Promise<UserData> {
         return this.connection.getUserInfo().then((task) => {
             return task.execute();
-        }).catch((error) => { 
+        }).catch((error) => {
             return Promise.reject(error);
         });
     }
@@ -47,7 +47,7 @@ export class AppManager {
             case Connection.UNKNOWN:
             case Connection.NONE:
             case Connection.ETHERNET:
-                this.connection = this.connectionLocal; 
+                this.connection = this.connectionLocal;
                 break;
             default:
                 this.connection = this.connectionServer;

@@ -1,22 +1,21 @@
-import {Http, Headers, URLSearchParams} from '@angular/http';
-import {Injectable} from '@angular/core';
+import {Http, HTTP_PROVIDERS, Headers, URLSearchParams} from '@angular/http';
+import {Inject, Injectable} from '@angular/core';
 
 import {Database} from '../database';
 import {Settings} from '../settings'
-import {Filesystem} from '../filesystem';
 
 import {IConnection} from './connection';
-import {ITask, UserDataTaskSaver} from '../tasks/task-userdata';
+import {ITask, TaskType, TaskFactory} from '../tasks/task';
 import {UserData} from '../descriptions';
 
 @Injectable()
 export class ConnectionServer extends IConnection {
-    constructor(private http: Http, private database: Database,
-        private filesystem: Filesystem, private settings: Settings) {
+    constructor(private database: Database, private settings: Settings,
+        private http: Http, private taskFactory: TaskFactory) {
         super();
     }
 
-    public login(userData: UserData): Promise<any> {
+    public login(userData: UserData): Promise<ITask> {
         return new Promise((resolve, reject) => {
             var headers = new Headers();
             headers.append('Content-Type', 'application/x-www-form-urlencoded');
@@ -34,7 +33,7 @@ export class ConnectionServer extends IConnection {
                         expires_in: Number(useraccess.expires_in),
                         token_type: useraccess.token_type
                     };
-                    resolve();
+                    resolve(this.taskFactory.create(TaskType.Default));
                 }, (error) => {
                     reject(error);
                 })
@@ -48,13 +47,15 @@ export class ConnectionServer extends IConnection {
         return this.http.get(this.settings.route('userinfo'), { search: searchParams })
             .toPromise().then((response) => {
                 var userdata = response.json();
-                return new UserDataTaskSaver(this.filesystem, this.database, this.settings, {
+                var task = this.taskFactory.create(TaskType.SaveUserData);
+                task.setResponseData({
                     login: this.settings.UserAccess.login,
                     password: this.settings.UserAccess.password,
                     firstname: userdata.firstname,
                     lastname: userdata.lastname,
                     avatar: userdata.avatar
                 });
+                return task;
             }).catch((error) => {
                 return Promise.reject(error);
             })

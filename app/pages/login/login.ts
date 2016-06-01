@@ -10,7 +10,7 @@ export class LoginPage {
   }
 
   private login(form: any) {
-    this.appManager.Connection.login({
+    this.appManager.login({
       login: form.login, password: form.password
     }).then(() => {
       this.events.publish('user:login');

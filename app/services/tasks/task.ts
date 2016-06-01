@@ -1,18 +1,7 @@
 export interface ITask {
     execute(): Promise<any>;
     getResponseData(): any;
+    setResponseData(responseData: any): void;
 }
 
-export class Task implements ITask {
-    
-    constructor(private responseData: any) {
-    }
-
-    public execute(): Promise<any> {
-        return Promise.resolve();
-    }
-    
-    public getResponseData(): any {
-        return this.responseData;
-    }
-};
+export {TaskType, TaskFactory} from './task-factory';

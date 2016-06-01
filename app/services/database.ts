@@ -19,11 +19,11 @@ export class Database {
                 existingDatabase: true
             });
             /*only dev */
-            this.db.query('DROP TABLE user');
+            /*this.db.query('DROP TABLE user');
             this.db.query('DROP TABLE courses');
             this.db.query('DROP TABLE learning_modules');
             this.db.query('DROP TABLE chapters');
-            this.db.query('DROP TABLE pages');
+            this.db.query('DROP TABLE pages');*/
             
             this.db.query(`CREATE TABLE IF NOT EXISTS user (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,

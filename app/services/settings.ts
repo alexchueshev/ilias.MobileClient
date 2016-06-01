@@ -6,7 +6,7 @@ import {UserAccess} from './descriptions';
 @Injectable()
 export class Settings {
     private serverURL: string;
-
+    
     private userAccess: UserAccess;
     public get UserAccess(): UserAccess {
         return this.userAccess;

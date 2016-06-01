@@ -1,18 +1,21 @@
 import {App, IonicApp, NavController, Platform, MenuController, Events} from 'ionic-angular';
-import {OnInit} from '@angular/core';
+import {OnInit, Injector, provide} from '@angular/core';
+import {HTTP_PROVIDERS, HTTP_BINDINGS, XHRBackend, BaseRequestOptions} from '@angular/http';
 
 import {AppManager} from './services/app-manager';
 import {Database} from './services/database';
 import {Filesystem} from './services/filesystem';
 import {Settings} from './services/settings';
+
 import {ConnectionLocal, ConnectionServer} from './services/connections/connection';
+import {TaskFactory} from './services/tasks/task';
 
 import {DesktopPage} from './pages/desktop/desktop';
 import {CoursesPage} from './pages/courses/courses';
 import {LoginPage} from './pages/login/login';
 
 @App({
-  template: `<ion-menu [content]="content" >
+  template: `<ion-menu [content]="content">
       
       <ion-content>
         <ion-list>
@@ -56,18 +59,27 @@ import {LoginPage} from './pages/login/login';
 
     <ion-nav id="menu-nav" #content [root]="rootPage"></ion-nav>`,
   config: {}, // http://ionicframework.com/docs/v2/api/config/Config/
-  providers: [AppManager, Database, Filesystem, Settings, ConnectionLocal, ConnectionServer]
-})  
+  providers: [
+    provide(AppManager, { useClass: AppManager }),
+    provide(Database, { useClass: Database }),
+    provide(Filesystem, { useClass: Filesystem }),
+    provide(Settings, { useClass: Settings }),
+    provide(ConnectionLocal, { useClass: ConnectionLocal }),
+    provide(ConnectionServer, { useClass: ConnectionServer }),
+    provide(TaskFactory, { useClass: TaskFactory })
+  ]
+})
+
 export class ILIASMobileClient implements OnInit {
   nav: NavController;
-
+  appM;
   /*Pages*/
   rootPage: any;
   desktopPage: any = DesktopPage;
   coursesPage: any = CoursesPage;
 
   constructor(private app: IonicApp, private platform: Platform, private menu: MenuController, private events: Events,
-    private appManager: AppManager, private database: Database, private filesystem: Filesystem, private settings: Settings) {
+    private appManager: AppManager, private services: Injector) {
   }
 
   public openPage(page): void {
@@ -78,9 +90,10 @@ export class ILIASMobileClient implements OnInit {
     this.platform.ready().then(() => {
       return Promise.all([
         this.appManager.initialize(),
-        this.database.initialize(),
-        this.filesystem.initialize(),
-        this.settings.initialize()
+        this.services.get(Settings).initialize(),
+        this.services.get(Database).initialize(),
+        this.services.get(Filesystem).initialize(),
+
       ]).then(() => {
         this.menu.enable(false);
         this.nav = this.app.getActiveNav();

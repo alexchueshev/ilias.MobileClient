@@ -18,15 +18,15 @@
   </ion-searchbar>
 
   <ion-list>
-    <ion-item-sliding>
-      <button ion-item (click)="onCourseClicked()">
+    <ion-item-sliding *ngFor="let course of courses">
+      <button ion-item (click)="onCourseClicked(course)">
           <ion-icon name="ios-book" item-left></ion-icon>
-          <h2>Операционные системы</h2>
+          <h2>{{course.title}}</h2>
           <p>учебный курс</p>
           <ion-icon name="ios-arrow-forward-outline" item-right hideWhen="ios"></ion-icon>
         </button>
       <ion-item-options>
-        <button primary (click)="onCourseClicked()">
+        <button primary (click)="onCourseClicked(course)">
             <ion-icon name="open"></ion-icon>
               Открыть
           </button>
@@ -37,5 +37,4 @@
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
-
 </ion-content>

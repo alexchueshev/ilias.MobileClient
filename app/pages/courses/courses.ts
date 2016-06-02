@@ -1,18 +1,32 @@
-import {Page, NavController} from 'ionic-angular';
+import {Page, NavController, NavParams} from 'ionic-angular';
+import {OnInit} from '@angular/core';
 
 import {LearningModulesPage} from '../learning-modules/learning-modules';
+
+import {AppManager} from '../../services/app-manager';
+import {Course, UserData} from '../../services/descriptions';
 
 @Page({
   templateUrl: 'build/pages/courses/courses.html'
 })
-export class CoursesPage {
-  nav: NavController;
+export class CoursesPage implements OnInit {
+  user: UserData;
+  courses: Course[];
 
-  constructor(nav: NavController) {
-    this.nav = nav;
+  constructor(private nav: NavController, private appManager: AppManager, params: NavParams) {
+    this.user = params.get('user');
   }
 
-  public onCourseClicked() {
-    this.nav.push(LearningModulesPage);
+  private onCourseClicked(course: Course) {
+    this.nav.push(LearningModulesPage, { course: course });
   }
+
+  public ngOnInit() {
+    this.appManager.getCourses(this.user).then((courses) => {
+      this.courses = courses;
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
 }

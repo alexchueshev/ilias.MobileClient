@@ -1,6 +1,5 @@
 import {App, IonicApp, NavController, Platform, MenuController, Events} from 'ionic-angular';
 import {OnInit, Injector, provide} from '@angular/core';
-import {HTTP_PROVIDERS, HTTP_BINDINGS, XHRBackend, BaseRequestOptions} from '@angular/http';
 
 import {AppManager} from './services/app-manager';
 import {Database} from './services/database';
@@ -8,6 +7,7 @@ import {Filesystem} from './services/filesystem';
 import {Settings} from './services/settings';
 
 import {ConnectionLocal, ConnectionServer} from './services/connections/connection';
+import {UserData} from './services/descriptions';
 import {TaskFactory} from './services/tasks/task';
 
 import {DesktopPage} from './pages/desktop/desktop';
@@ -22,9 +22,9 @@ import {LoginPage} from './pages/login/login';
           
           <button ion-item>
             <ion-avatar item-left>
-              <img src="avatar-cher.png">
+              <img src="{{user?.avatar}}">
             </ion-avatar>
-            <h1>Александр</h1>
+            <h1>{{user?.firstname}}</h1>
             <p>Открыть профиль</p>
             <ion-icon name="ios-arrow-forward-outline" item-right hideWhen="ios"></ion-icon>
           </button>
@@ -71,8 +71,8 @@ import {LoginPage} from './pages/login/login';
 })
 
 export class ILIASMobileClient implements OnInit {
+  user: UserData;
   nav: NavController;
-  appM;
   /*Pages*/
   rootPage: any;
   desktopPage: any = DesktopPage;
@@ -83,7 +83,7 @@ export class ILIASMobileClient implements OnInit {
   }
 
   public openPage(page): void {
-    this.nav.setRoot(page, null, { animate: true });
+    this.nav.setRoot(page, {user: this.user}, { animate: true });
   }
 
   public ngOnInit() {
@@ -92,8 +92,7 @@ export class ILIASMobileClient implements OnInit {
         this.appManager.initialize(),
         this.services.get(Settings).initialize(),
         this.services.get(Database).initialize(),
-        this.services.get(Filesystem).initialize(),
-
+        this.services.get(Filesystem).initialize()
       ]).then(() => {
         this.menu.enable(false);
         this.nav = this.app.getActiveNav();
@@ -108,7 +107,8 @@ export class ILIASMobileClient implements OnInit {
   }
 
   private onUserLogin() {
-    this.appManager.getUserInfo().then((data) => {
+    this.appManager.getUserInfo().then((userdata) => {
+      this.user = userdata;
       this.menu.enable(true);
       this.openPage(this.desktopPage);
     }).catch((error) => {

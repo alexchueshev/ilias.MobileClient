@@ -1,12 +1,12 @@
-import {Http, HTTP_PROVIDERS, Headers, URLSearchParams} from '@angular/http';
-import {Inject, Injectable} from '@angular/core';
+import {Http, Headers, URLSearchParams} from '@angular/http';
+import {Injectable} from '@angular/core';
 
 import {Database} from '../database';
 import {Settings} from '../settings'
 
 import {IConnection} from './connection';
 import {ITask, TaskType, TaskFactory} from '../tasks/task';
-import {UserData} from '../descriptions';
+import {UserData, Course, LearningModule} from '../descriptions';
 
 @Injectable()
 export class ConnectionServer extends IConnection {
@@ -15,29 +15,22 @@ export class ConnectionServer extends IConnection {
         super();
     }
 
-    public login(userData: UserData): Promise<ITask> {
-        return new Promise((resolve, reject) => {
-            var headers = new Headers();
-            headers.append('Content-Type', 'application/x-www-form-urlencoded');
-            this.http.post(this.settings.route('auth'),
-                `grant_type=password&username=${userData.login}&password=${userData.password}&api_key=${this.settings.setting('api_key')}`, {
-                    headers: headers
-                })
-                .subscribe((data) => {
-                    var useraccess = data.json();
-                    this.settings.UserAccess = {
-                        login: userData.login,
-                        password: userData.password,
-                        access_token: useraccess.access_token,
-                        refresh_token: useraccess.refresh_token,
-                        expires_in: Number(useraccess.expires_in),
-                        token_type: useraccess.token_type
-                    };
-                    resolve(this.taskFactory.create(TaskType.Default));
-                }, (error) => {
-                    reject(error);
-                })
-        });
+    public login(userdata: UserData): Promise<ITask> {
+        var headers = new Headers();
+        headers.append('Content-Type', 'application/x-www-form-urlencoded');
+        
+        return this.http.post(this.settings.route('auth'),
+            `grant_type=password&username=${userdata.login}&password=${userdata.password}&api_key=${this.settings.setting('api_key')}`, {
+                headers: headers
+            })
+            .toPromise().then((response) => {
+                this.settings.UserAccess = response.json();
+                this.settings.UserAccess.login = userdata.login;
+                this.settings.UserAccess.password = userdata.password;
+                return this.taskFactory.create();
+            }).catch((error) => { 
+                return Promise.reject(error);
+            });
     }
 
     public getUserInfo(): Promise<ITask> {
@@ -46,15 +39,8 @@ export class ConnectionServer extends IConnection {
 
         return this.http.get(this.settings.route('userinfo'), { search: searchParams })
             .toPromise().then((response) => {
-                var userdata = response.json();
                 var task = this.taskFactory.create(TaskType.SaveUserData);
-                task.setResponseData({
-                    login: this.settings.UserAccess.login,
-                    password: this.settings.UserAccess.password,
-                    firstname: userdata.firstname,
-                    lastname: userdata.lastname,
-                    avatar: userdata.avatar
-                });
+                task.setResponseData(response.json());
                 return task;
             }).catch((error) => {
                 return Promise.reject(error);
@@ -62,29 +48,41 @@ export class ConnectionServer extends IConnection {
 
     }
 
-    public getCourses(): Promise<any> {
-        return new Promise((resolve, reject) => {
-            var searchParams = new URLSearchParams();
-            searchParams.set('access_token', this.settings.UserAccess.access_token);
-            this.http.get(this.settings.route('courses'), { search: searchParams })
-                .subscribe((data) => {
-                    resolve(data.json());
-                }, (error) => {
-                    reject(error);
-                })
-        })
+    public getCourses(userdata: UserData): Promise<ITask> {
+        var localCourses = [];
+        var searchParams = new URLSearchParams();
+        searchParams.set('access_token', this.settings.UserAccess.access_token);
+        return this.http.get(this.settings.route('courses'), { search: searchParams })
+            .toPromise().then((response) => {
+                var courses = response.json().courses;
+                var task = this.taskFactory.create(TaskType.MergeCourses);
+                task.setResponseData({
+                    user: userdata,
+                    localCourses: localCourses,
+                    remoteCourses: courses.map(crs => <Course>crs[0])
+                });
+                return task;
+            }).catch((error) => {
+                return Promise.reject(error);
+            })
     }
 
-    public getCourseInfo(refId: number): Promise<any> {
-        return new Promise((resolve, reject) => {
-            var searchParams = new URLSearchParams();
-            searchParams.set('access_token', this.settings.UserAccess.access_token);
-            this.http.get(this.settings.route('courseinfo').concat(String(refId)), { search: searchParams })
-                .subscribe((data) => {
-                    resolve(data.json());
-                }, (error) => {
-                    reject(error);
-                })
-        });
+    public getCourseInfo(course: Course): Promise<ITask> {
+        var localModules = [];
+        var searchParams = new URLSearchParams();
+        searchParams.set('access_token', this.settings.UserAccess.access_token);
+        return this.http.get(this.settings.route('courseinfo').concat(String(course.ref_id)), { search: searchParams })
+            .toPromise().then((response) => {
+                var contents = response.json().contents;
+                var task = this.taskFactory.create(TaskType.MergeLearningModules);
+                task.setResponseData({
+                    course: course,
+                    localModules: localModules,
+                    remoteModules: contents.filter(obj => obj.type === 'lm')
+                });
+                return task;
+            }).catch((error) => {
+                return Promise.reject(error);
+            })
     }
 };

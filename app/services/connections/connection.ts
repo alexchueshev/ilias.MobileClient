@@ -1,4 +1,4 @@
-import {UserData} from '../descriptions';
+import {UserData, Course} from '../descriptions';
 import {ITask} from '../tasks/task-userdata';
 
 export abstract class IConnection {
@@ -9,10 +9,12 @@ export abstract class IConnection {
 
     public abstract getUserInfo(): Promise<ITask>;
 
-    public abstract getCourseInfo(refId: number);
+    public getCourses(userdata: UserData): Promise<ITask> {
+        return Promise.resolve(null);
+    }
 
-    public getCourses(): Promise<any> {
-        return Promise.resolve();
+    public getCourseInfo(course: Course): Promise<ITask> {
+        return Promise.resolve(null);
     }
 }
 

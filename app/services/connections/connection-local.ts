@@ -20,8 +20,4 @@ export class ConnectionLocal extends IConnection {
     public getUserInfo(): Promise<ITask> {
         return Promise.resolve(null);
     }
-
-    public getCourseInfo(refId: number) {
-
-    }
 };

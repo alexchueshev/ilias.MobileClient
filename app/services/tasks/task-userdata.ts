@@ -1,5 +1,3 @@
-import {Inject} from '@angular/core';
-
 import {Database} from '../database';
 import {Filesystem} from '../filesystem';
 import {Settings} from '../settings';
@@ -10,8 +8,7 @@ import {UserData} from '../descriptions';
 export class UserDataTaskSaver implements ITask {
     private userdata: UserData;
 
-    constructor(@Inject(Filesystem) private filesystem, @Inject(Database) private database,
-        @Inject(Settings) private settings) {
+    constructor(private filesystem: Filesystem, private database: Database, private settings: Settings) {
     }
 
     public execute(): Promise<UserData> {
@@ -19,7 +16,8 @@ export class UserDataTaskSaver implements ITask {
         return this.filesystem.downloadFile(url, Filesystem.PERSISTENT).then((imagefile) => {
             this.userdata.avatar = imagefile.toURL();
             return this.database.saveUserData(this.userdata);
-        }).then(() => {
+        }).then((id) => {
+            this.userdata.user_id = id;
             return this.userdata;
         }).catch((error) => {
             return Promise.reject(error);

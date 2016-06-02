@@ -18,10 +18,10 @@
   </ion-searchbar>
 
   <ion-list>
-    <ion-item-sliding>
+    <ion-item-sliding *ngFor="let learningModule of learningModules">
       <button ion-item (click)="onLearningModuleClick()">
           <ion-icon name="paper" item-left></ion-icon>
-          <h2>ОС Linux</h2>
+          <h2>{{learningModule.title}}</h2>
           <p>учебный модуль</p>
           <ion-icon name="ios-arrow-forward-outline" item-right hideWhen="ios"></ion-icon>
         </button>
@@ -30,9 +30,15 @@
             <ion-icon name="open"></ion-icon>
               Открыть
         </button>
-        <button secondary>
-            <ion-icon name="download"></ion-icon>
-              Загрузить
+        <button secondary [ngSwitch]="getStatus(learningModule)">
+            <template [ngSwitchWhen]="'Remote'">
+              <ion-icon name="download"></ion-icon>
+                Загрузить
+            </template>
+            <template [ngSwitchWhen]="'Local'">
+              <ion-icon name="refresh"></ion-icon>
+                Обновить
+            </template>
         </button>
         <button danger>
             <ion-icon name="close"></ion-icon>
@@ -40,7 +46,7 @@
           </button>
       </ion-item-options>
     </ion-item-sliding>
-    
+    <!--
     <ion-item-sliding>
       <button ion-item>
           <ion-icon name="paper" item-left></ion-icon>
@@ -109,6 +115,7 @@
           </button>
       </ion-item-options>
     </ion-item-sliding>
+    -->
   </ion-list>
 
 </ion-content>

@@ -15,6 +15,10 @@
         "url": "/v1/courses/",
         "method": "GET"
     },
+    "downloadLearningModule": {
+        "url": "/v1/courses/download/lm/",
+        "method": "GET"
+    },
     "routes": {
         "url": "/v2/util/routes",
         "method": "GET"

@@ -1,3 +1,10 @@
 .content {
-  
+    .ion-md-list-box {
+        color: #387ef5
+    }
+  .action-sheet-cancel ion-icon,
+  .action-sheet-destructive ion-icon {
+    color: #757575;
+  }
 }
+

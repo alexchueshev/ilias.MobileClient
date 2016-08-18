@@ -2,6 +2,13 @@
   <ion-title>
     ILIAS АлтГТУ
   </ion-title>
+  <ion-buttons end>
+    <button (click)="changeConnection()">
+      <ion-icon name="wifi" isActive="false"></ion-icon>
+      {{statusDescription}}
+    </button>
+  </ion-buttons>
+
 </ion-navbar>
 
 <ion-content overflow-scroll="false" padding="true">
@@ -10,12 +17,12 @@
     <ion-list>
       <ion-item>
         <ion-label stacked>Логин</ion-label>
-        <ion-input type="text" ngControl="login" required></ion-input>
+        <ion-input type="text" ngControl="login"></ion-input>
       </ion-item>
 
       <ion-item>
         <ion-label stacked>Пароль</ion-label>
-        <ion-input type="password" ngControl="password" required></ion-input>
+        <ion-input type="password" ngControl="password"></ion-input>
       </ion-item>
     </ion-list>
 

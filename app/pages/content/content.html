@@ -2,10 +2,10 @@
   <button menuToggle>
     <ion-icon name="menu"></ion-icon>
   </button>
-  <ion-title >
-    ОС Linux
+  <ion-title>
+    {{learningModule?.title}}
   </ion-title>
-  
+
   <ion-buttons end>
     <button (click)="openTableOfContents()">
       <ion-icon ios="ios-list-box-outline" name="list-box"></ion-icon>
@@ -19,10 +19,9 @@
 <ion-content class="content">
   <ion-card>
     <ion-card-header>
-      Card Header
+      {{title}}
     </ion-card-header>
-    <ion-card-content>
-      Hello World
+    <ion-card-content [innerHTML]="content">
     </ion-card-content>
   </ion-card>
 </ion-content>

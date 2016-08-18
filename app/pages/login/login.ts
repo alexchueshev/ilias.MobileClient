@@ -1,23 +1,53 @@
-import {Page, Events} from 'ionic-angular';
+import {Page, Events, Loading, NavController, Alert} from 'ionic-angular';
 
-import {AppManager} from '../../services/app-manager';
+import {AppManager, ConnectionType} from '../../services/app-manager';
 
+/**
+ * Controller for login page
+ * 
+ * @export
+ * @class LoginPage
+ */
 @Page({
   templateUrl: 'build/pages/login/login.html'
 })
 export class LoginPage {
-  constructor(private events: Events, private appManager: AppManager) {
+  private static waitMessage = 'Пожалуйста, подождите...';
+  private static authError = 'Ошибка авторизации!';
+  private static wrongData = 'Вы ввели неправильные логин и/или пароль.';
+  private status: ConnectionType;
+  private statusDescription: string;
+
+  constructor(private events: Events, private appManager: AppManager, private nav: NavController) {
+    this.changeConnection();
   }
 
   private login(form: any) {
+    var loading = Loading.create({
+      content: LoginPage.waitMessage
+    });
+    this.nav.present(loading);
+
     this.appManager.login({
       login: form.login, password: form.password
-    }).then(() => {
-      this.events.publish('user:login');
+    }).then((userdata) => {
+      loading.dismiss();
+      this.events.publish('user:login', userdata);
     }).catch((error) => {
-      console.log(error);
-      alert("Access denied!" + error);
+      loading.dismiss();
+      var alert = Alert.create({
+        title: LoginPage.authError,
+        message: LoginPage.wrongData,
+        buttons: ['OK']
+      });
+      this.nav.present(alert);
     })
 
+  }
+
+  private changeConnection() {
+    var target: ConnectionType = (this.status == ConnectionType.Online) ? ConnectionType.Offline : ConnectionType.Online;
+    this.status = this.appManager.updateConnection(target);
+    this.statusDescription = ConnectionType[this.status];
   }
 }

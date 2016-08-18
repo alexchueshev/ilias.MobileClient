@@ -8,33 +8,31 @@
 </ion-navbar>
 
 <ion-content class="courses">
-  <ion-refresher (refresh)="doRefresh($event)">
+
+  <ion-refresher (refresh)="refreshCourses($event)" [pullMin]="110">
     <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Потяните для обновления" refreshingText="Обновление...">
     </ion-refresher-content>
   </ion-refresher>
 
-
-  <ion-searchbar [(ngModel)]="myInput" [hideCancelButton]="shouldHideCancel" (input)="onInput($event)" (cancel)="onCancel($event)">
-  </ion-searchbar>
-
-  <ion-list>
-    <ion-item-sliding *ngFor="let course of courses">
-      <button ion-item (click)="onCourseClicked(course)">
+  <ion-card>
+    <ion-card-content *ngIf="courses.length == 0">
+      Учебных курсов не найдено...
+    </ion-card-content>
+    <ion-list *ngIf="courses.length > 0">
+      <ion-item-sliding *ngFor="let course of courses">
+        <button ion-item (click)="onCourseClicked(course)">
           <ion-icon name="ios-book" item-left></ion-icon>
           <h2>{{course.title}}</h2>
           <p>учебный курс</p>
           <ion-icon name="ios-arrow-forward-outline" item-right hideWhen="ios"></ion-icon>
         </button>
-      <ion-item-options>
-        <button primary (click)="onCourseClicked(course)">
+        <ion-item-options>
+          <button primary (click)="onCourseClicked(course)">
             <ion-icon name="open"></ion-icon>
               Открыть
-          </button>
-        <button danger>
-            <ion-icon name="close"></ion-icon>
-              Убрать
-          </button>
-      </ion-item-options>
-    </ion-item-sliding>
-  </ion-list>
+        </button>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+  </ion-card>
 </ion-content>

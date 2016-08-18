@@ -8,29 +8,26 @@
 </ion-navbar>
 
 <ion-content class="learning-modules">
-  <ion-refresher (refresh)="doRefresh($event)">
+  <ion-refresher (refresh)="refreshLearningModules($event)" [pullMin]="110">
     <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Потяните для обновления" refreshingText="Обновление...">
     </ion-refresher-content>
   </ion-refresher>
 
-
-  <ion-searchbar [(ngModel)]="myInput" [hideCancelButton]="shouldHideCancel" (input)="onInput($event)" (cancel)="onCancel($event)">
-  </ion-searchbar>
-
-  <ion-list>
-    <ion-item-sliding *ngFor="let learningModule of learningModules">
-      <button ion-item (click)="onLearningModuleClick()">
+  <ion-card>
+    <ion-list>
+      <ion-item-sliding *ngFor="let learningModule of learningModules">
+        <button ion-item (click)="onLearningModuleClick(learningModule)">
           <ion-icon name="paper" item-left></ion-icon>
           <h2>{{learningModule.title}}</h2>
           <p>учебный модуль</p>
           <ion-icon name="ios-arrow-forward-outline" item-right hideWhen="ios"></ion-icon>
         </button>
-      <ion-item-options>
-        <button primary (click)="onLearningModuleClick()">
+        <ion-item-options>
+          <button primary (click)="onLearningModuleClick(learningModule)">
             <ion-icon name="open"></ion-icon>
               Открыть
         </button>
-        <button secondary [ngSwitch]="getStatus(learningModule)">
+          <button secondary [ngSwitch]="getStatus(learningModule)" (click)="downloadModule(learningModule)">
             <template [ngSwitchWhen]="'Remote'">
               <ion-icon name="download"></ion-icon>
                 Загрузить
@@ -39,83 +36,19 @@
               <ion-icon name="refresh"></ion-icon>
                 Обновить
             </template>
+         </button>
+          <button [color]="learningModule.onDesktop? 'danger' : 'dark' " [ngSwitch]="learningModule.onDesktop" (click)="modifyDesktop(learningModule)">
+              <template [ngSwitchWhen]="true">
+                <ion-icon name="close"></ion-icon>
+                  Убрать
+               </template>
+               <template [ngSwitchWhen]="false">
+                  <ion-icon name="desktop"></ion-icon>
+                  Добавить
+               </template>
         </button>
-        <button danger>
-            <ion-icon name="close"></ion-icon>
-              Убрать
-          </button>
-      </ion-item-options>
-    </ion-item-sliding>
-    <!--
-    <ion-item-sliding>
-      <button ion-item>
-          <ion-icon name="paper" item-left></ion-icon>
-          <h2>ОС Linux1</h2>
-          <p>учебный модуль</p>
-          <ion-icon name="ios-arrow-forward-outline" item-right hideWhen="ios"></ion-icon>
-        </button>
-      <ion-item-options>
-        <button primary>
-            <ion-icon name="open"></ion-icon>
-              Открыть
-        </button>
-        <button secondary>
-            <ion-icon name="download"></ion-icon>
-              Обновить
-        </button>
-        <button danger>
-            <ion-icon name="close"></ion-icon>
-              Убрать
-          </button>
-      </ion-item-options>
-    </ion-item-sliding>
-    
-    <ion-item-sliding>
-      <button ion-item>
-          <ion-icon name="paper" item-left></ion-icon>
-          <h2>ОС Linux2</h2>
-          <p>учебный модуль</p>
-          <ion-icon name="ios-arrow-forward-outline" item-right hideWhen="ios"></ion-icon>
-        </button>
-      <ion-item-options>
-        <button primary>
-            <ion-icon name="open"></ion-icon>
-              Открыть
-        </button>
-        <button secondary>
-            <ion-icon name="download"></ion-icon>
-              Загрузить
-        </button>
-        <button dark>
-            <ion-icon name="desktop"></ion-icon>
-              Добавить
-          </button>
-      </ion-item-options>
-    </ion-item-sliding>
-    
-    <ion-item-sliding>
-      <button ion-item>
-          <ion-icon name="paper" item-left></ion-icon>
-          <h2>ОС Linux3</h2>
-          <p>учебный модуль</p>
-          <ion-icon name="ios-arrow-forward-outline" item-right hideWhen="ios"></ion-icon>
-        </button>
-      <ion-item-options>
-        <button primary>
-            <ion-icon name="open"></ion-icon>
-              Открыть
-        </button>
-        <button secondary>
-            <ion-icon name="refresh"></ion-icon>
-              Обновить
-        </button>
-        <button dark>
-            <ion-icon name="desktop"></ion-icon>
-              Добавить
-          </button>
-      </ion-item-options>
-    </ion-item-sliding>
-    -->
-  </ion-list>
-
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+  </ion-card>
 </ion-content>

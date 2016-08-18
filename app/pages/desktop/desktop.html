@@ -8,53 +8,34 @@
 </ion-navbar>
 
 <ion-content class="desktop">
-  <ion-refresher (refresh)="doRefresh($event)">
+  <ion-refresher (refresh)="refreshDesktop($event)" [pullMin]="110">
     <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Потяните для обновления" refreshingText="Обновление...">
     </ion-refresher-content>
   </ion-refresher>
-
-  <ion-searchbar [(ngModel)]="myInput" [hideCancelButton]="shouldHideCancel" (input)="onInput($event)" (cancel)="onCancel($event)">
-  </ion-searchbar>
-
-  <ion-list>
-    <ion-item-sliding>
-      <button ion-item>
-          <ion-icon name="ios-book" item-left></ion-icon>
-          <h2>Операционные системы</h2>
-          <p>учебный курс</p>
-          <ion-icon name="ios-arrow-forward-outline" item-right hideWhen="ios"></ion-icon>
-        </button>
-      <ion-item-options>
-        <button primary>
-            <ion-icon name="open"></ion-icon>
-              Открыть
-          </button>
-        <button danger>
-            <ion-icon name="close"></ion-icon>
-              Убрать
-          </button>
-      </ion-item-options>
-    </ion-item-sliding>
-
-    <ion-item-sliding>
-      <button ion-item>
+  <ion-card>
+    <ion-card-content *ngIf="learningModules.length == 0">
+      Ваш рабочий стол пуст... Добавьте сюда свои учебные модули!
+    </ion-card-content>
+    <ion-list *ngIf="learningModules.length > 0">
+      <ion-item-sliding *ngFor="let learningModule of learningModules">
+        <button ion-item (click)="onLearningModuleClick(learningModule)">
           <ion-icon name="paper" item-left></ion-icon>
-          <h2>ОС Linux</h2>
+          <h2>{{learningModule.title}}</h2>
           <p>учебный модуль</p>
           <ion-icon name="ios-arrow-forward-outline" item-right hideWhen="ios"></ion-icon>
         </button>
-      <ion-item-options>
-        <button primary>
+        <ion-item-options>
+          <button primary (click)="onLearningModuleClick(learningModule)">
             <ion-icon name="open"></ion-icon>
               Открыть
           </button>
-        <button danger>
+          <button danger (click)="modifyDesktop(learningModule)">
             <ion-icon name="close"></ion-icon>
               Убрать
           </button>
-      </ion-item-options>
-    </ion-item-sliding>
-  </ion-list>
-
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+    </ion-card>
 
 </ion-content>

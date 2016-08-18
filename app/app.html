@@ -1,0 +1,42 @@
+<ion-menu [content]="content">
+
+    <ion-content>
+        <ion-list>
+
+            <button ion-item>
+            <ion-avatar item-left>
+              <img src="{{user?.avatar}}">
+            </ion-avatar>
+            <h1>{{user?.firstname}} {{user?.lastname}}</h1>
+            <p>{{user?.login}}</p>
+          </button>
+
+            <button ion-item (click)="changeConnection()" detail-push>
+            <ion-icon name="wifi" isActive="false" item-left></ion-icon>
+            {{statusDescription}}
+            <ion-icon name="ios-arrow-forward-outline" item-right hideWhen="ios"></ion-icon>
+          </button>
+
+            <button ion-item (click)="openPage(desktopPage)" detail-push>
+            <ion-icon name="desktop" item-left></ion-icon>
+            Рабочий стол
+            <ion-icon name="ios-arrow-forward-outline" item-right hideWhen="ios"></ion-icon>
+          </button>
+
+            <button ion-item (click)="openPage(coursesPage)">
+            <ion-icon name="school" item-left></ion-icon>
+            Мои курсы
+            <ion-icon name="ios-arrow-forward-outline" item-right hideWhen="ios"></ion-icon>
+          </button>
+
+            <button ion-item (click)="closeApplication()">
+            <ion-icon name="log-out" item-left></ion-icon>
+            Выход
+            <ion-icon name="ios-arrow-forward-outline" item-right hideWhen="ios"></ion-icon>
+          </button>
+
+        </ion-list>
+    </ion-content>
+</ion-menu>
+
+<ion-nav id="menu-nav" #content [root]="rootPage"></ion-nav>
